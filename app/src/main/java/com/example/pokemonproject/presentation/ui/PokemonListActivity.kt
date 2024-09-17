@@ -28,12 +28,26 @@ class PokemonListActivity : AppCompatActivity() {
             val pokemonId = selectedPokemon.id
 
             viewModel.getPokemonDetails(pokemonId) { pokemonDetail ->
-                val intent = Intent(this, DetailActivity::class.java)
-                intent.putExtra("pokemon_name", pokemonDetail.name)
-                intent.putExtra("pokemon_image", pokemonDetail.sprites.frontDefault)
-                intent.putExtra("pokemon_height", pokemonDetail.height)
-                intent.putExtra("pokemon_weight", pokemonDetail.weight)
-                startActivity(intent)
+                if (pokemonDetail != null) {
+                    val intent = Intent(this, DetailActivity::class.java).apply {
+                        putExtra("pokemon_name", pokemonDetail.name)
+                        putExtra("pokemon_image", pokemonDetail.sprites.frontDefault)
+                        putExtra("pokemon_height", pokemonDetail.height)
+                        putExtra("pokemon_weight", pokemonDetail.weight)
+
+                        val types = pokemonDetail.types.map { it.type.name }
+                        putStringArrayListExtra("pokemon_types", ArrayList(types))
+
+                        val abilities = pokemonDetail.abilities.map { it.ability.name }
+                        putStringArrayListExtra("pokemon_abilities", ArrayList(abilities))
+
+                        val stats = pokemonDetail.stats.map { "${it.stat.name}: ${it.baseStat}" }
+                        putStringArrayListExtra("pokemon_stats", ArrayList(stats))
+                    }
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Failed to fetch Pokémon details", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

@@ -31,7 +31,7 @@ class PokemonAdapter(
         val pokemon = pokemonList[position]
 
         holder.name.text = pokemon.name
-        var id_image = pokemon.id * 3
+        var id_image = pokemon.id
         val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id_image}.png"
         Glide.with(holder.itemView.context)
             .load(imageUrl)
